@@ -2,9 +2,8 @@ import 'package:covid19_app/data/utils/shared_pref_manager.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
 import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:covid19_app/presentation/common/toast.dart';
-import 'package:covid19_app/presentation/detail_favorite/ui/detail_favorite_screen.dart';
 import 'package:covid19_app/presentation/favorite/bloc/favorite_bloc.dart';
-import 'package:covid19_app/presentation/login/ui/login_screen.dart';
+import 'package:covid19_app/utils/route/app_routing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,13 +77,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailFavoriteScreen(
-                                              country: state.listCountry!
-                                                  .elementAt(index))));
+                              Navigator.pushNamed(
+                                context,
+                                RouteDefine.detailFavoriteScreen.name,
+                                arguments: state.listCountry!.elementAt(index),
+                              );
                             },
                             child: Card(
                                 child: Padding(
@@ -135,7 +132,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                     onPressed: () async {
                                       ScaffoldMessenger.of(context)
                                           .removeCurrentSnackBar();
-                                      final a = await showDialogApp(context,"Hủy","Đồng ý","Hủy theo dõi quốc gia này?");
+                                      final a = await showDialogApp(
+                                          context,
+                                          "Hủy",
+                                          "Đồng ý",
+                                          "Hủy theo dõi quốc gia này?");
                                       if (a == Selects.cancel) {
                                       } else if (a == Selects.accept) {
                                         context.read<FavoriteBloc>().add(
@@ -157,11 +158,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   );
                 } else {
                   return const Expanded(
-                      child: Center(
-                          child: Text(
-                    "Bạn chưa theo dõi quốc gia nào",
-                    style: TextStyle(fontSize: 15),
-                  )));
+                    child: Center(
+                      child: Text(
+                        "Bạn chưa theo dõi quốc gia nào",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  );
                 }
               } else if (state is FavoriteLoadingFailState) {
                 return const Center(
@@ -190,8 +193,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
+              Navigator.pushNamed(context, RouteDefine.loginScreen.name);
             },
             child: SizedBox(
               height: 50,

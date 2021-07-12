@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:covid19_app/data/utils/shared_pref_manager.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
 import 'package:covid19_app/presentation/common/enum.dart';
+import 'package:covid19_app/utils/route/app_routing.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:covid19_app/config/app_color.dart';
-import 'package:covid19_app/presentation/home/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: AppRouting.generateRoute,
       debugShowCheckedModeBanner: false,
+      //initialRoute: RouteDefine.mainScreen.name,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -124,9 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     borderRadius: BorderRadius.all(Radius.circular(40)),
                                   )),
                               onPressed: () {
-
-                                Navigator.push(
-                                    context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+                                Navigator.pushNamed(context, RouteDefine.homeScreen.name);
                               },
                               child: const Text("Tiếp tục ",style: TextStyle(color: Colors.white),),
                             ),
@@ -166,4 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+}
+class MainRoute {
+  static Widget get route => const MyApp();
 }

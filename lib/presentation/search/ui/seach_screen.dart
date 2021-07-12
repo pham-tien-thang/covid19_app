@@ -1,14 +1,13 @@
 import 'package:covid19_app/config/app_color.dart';
 import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:covid19_app/presentation/common/error_form.dart';
-import 'package:covid19_app/presentation/login/ui/login_screen.dart';
+import 'package:covid19_app/utils/route/app_routing.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
 import 'package:covid19_app/presentation/common/toast.dart';
 import 'package:covid19_app/data/api/covid_api.dart';
 import 'package:covid19_app/data/responsitories/covid_respository_impl.dart';
 import 'package:covid19_app/domain/usescase/covid_usescase.dart';
-import 'package:covid19_app/presentation/detail/ui/detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:covid19_app/presentation/search/bloc/search_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -68,13 +67,10 @@ class _SearchScreen extends State<SearchScreen> {
                             context, "Hủy", "Đăng nhập", "Bạn chưa đăng nhập");
                         if (dialog == Selects.cancel) {
                         } else if (dialog == Selects.accept) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginScreen()));
+                          Navigator.pushNamed(
+                              context, RouteDefine.loginScreen.name);
                         }
                       }
-                      ;
                       break;
                     case Error.exist:
                       showToast(
@@ -135,14 +131,12 @@ class _SearchScreen extends State<SearchScreen> {
                                   return InkWell(
                                     onTap: () {
                                       fToast.removeQueuedCustomToasts();
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DetailScreen(
-                                                      country: state
-                                                          .listCountry!
-                                                          .elementAt(index))));
+                                      Navigator.pushNamed(
+                                        context,
+                                        RouteDefine.detailScreen.name,
+                                        arguments:
+                                            state.listCountry!.elementAt(index),
+                                      );
                                     },
                                     child: Card(
                                         child: Padding(
@@ -222,14 +216,11 @@ class _SearchScreen extends State<SearchScreen> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return InkWell(
                                     onTap: () {
-                                      Navigator.push(
+                                      Navigator.pushNamed(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) => DetailScreen(
-                                            country: state.listCountry!
-                                                .elementAt(index),
-                                          ),
-                                        ),
+                                        RouteDefine.detailScreen.name,
+                                        arguments:
+                                        state.listCountry!.elementAt(index),
                                       );
                                     },
                                     child: Card(

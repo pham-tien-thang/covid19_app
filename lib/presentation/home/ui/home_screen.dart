@@ -1,15 +1,11 @@
 import 'dart:io';
 
-import 'package:covid19_app/data/api/covid_api.dart';
-import 'package:covid19_app/data/responsitories/covid_respository_impl.dart';
 import 'package:covid19_app/data/utils/shared_pref_manager.dart';
-import 'package:covid19_app/domain/usescase/covid_usescase.dart';
 import 'package:covid19_app/presentation/common/array.dart';
 import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:covid19_app/presentation/favorite/ui/favorite_screen.dart';
 import 'package:covid19_app/presentation/home/ui/chart/line/line_chart.dart';
-import 'package:covid19_app/presentation/login/ui/login_screen.dart';
-import 'package:dio/dio.dart';
+import 'package:covid19_app/utils/route/app_routing.dart';
 import '../../common/menu.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
 import 'package:covid19_app/presentation/home/bloc/home_bloc.dart';
@@ -70,11 +66,12 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
       });
       return false;
     } else {
-      final a = await showDialogApp(context,"Hủy","Đồng ý","Thoát ứng dụng ?");
+      final a =
+          await showDialogApp(context, "Hủy", "Đồng ý", "Thoát ứng dụng ?");
       if (a == Selects.cancel) {
         return false;
       } else if (a == Selects.accept) {
-       exit(1);
+        exit(1);
       }
       return false;
     }
@@ -91,15 +88,13 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
       elevation: 8.0,
     );
     if (result == Option.login) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      Navigator.pushNamed(context, RouteDefine.loginScreen.name);
     } else if (result == Option.favorite) {
     } else if (result == Option.logout) {
       try {
         await FirebaseAuth.instance.signOut();
         sharedPrefs.removeValues();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()));
+        Navigator.pushNamed(context, RouteDefine.loginScreen.name);
       } catch (e) {
         return;
       }
@@ -157,171 +152,166 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _widgetHome() {
-    return BlocProvider(
-      create: (BuildContext context) =>
-          HomeBloc(CovidUsescase(CovidRespositoryImpl(CovidApi(Dio()))))
-            ..add(LoadingHomeEvent()),
-      child: BlocBuilder<HomeBloc, HomeState>(
-        buildWhen: (previous, state) {
-          return state is ChartState ? false : true;
-        },
-        builder: (context, state) {
-          if (state is HomeLoadingState) {
-            return const Center(
-                child: SpinKitDoubleBounce(
-              color: Colors.green,
-            ));
-          } else if (state is HomeSuccessState) {
-            animationInfected =
-                Tween<double>(begin: 0, end: state.world!.cases * 1)
-                    .animate(_controller)
-                      ..addListener(() {
-                        // print(animationInfected.value.toStringAsFixed(0));
-                        setState(() {
-                          infected = animationInfected.value.toStringAsFixed(0);
-                        });
+    return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, state) {
+        return state is ChartState ? false : true;
+      },
+      builder: (context, state) {
+        if (state is HomeLoadingState) {
+          return const Center(
+              child: SpinKitDoubleBounce(
+            color: Colors.green,
+          ));
+        } else if (state is HomeSuccessState) {
+          animationInfected =
+              Tween<double>(begin: 0, end: state.world!.cases * 1)
+                  .animate(_controller)
+                    ..addListener(() {
+                      // print(animationInfected.value.toStringAsFixed(0));
+                      setState(() {
+                        infected = animationInfected.value.toStringAsFixed(0);
                       });
-            animationDeath =
-                Tween<double>(begin: 0, end: state.world!.deaths * 1)
-                    .animate(_controller)
-                      ..addListener(() {
-                        //print(animationDeath.value.toStringAsFixed(0));
-                        setState(() {
-                          death = animationDeath.value.toStringAsFixed(0);
-                        });
-                      });
-            animationRecovered = Tween<double>(
-                    begin: 0, end: state.world!.recovered * 1)
-                .animate(_controller)
-                  ..addListener(() {
-                    // print(animationRecovered.value.toStringAsFixed(0));
-                    setState(() {
-                      recovered = animationRecovered.value.toStringAsFixed(0);
                     });
+          animationDeath =
+              Tween<double>(begin: 0, end: state.world!.deaths * 1)
+                  .animate(_controller)
+                    ..addListener(() {
+                      //print(animationDeath.value.toStringAsFixed(0));
+                      setState(() {
+                        death = animationDeath.value.toStringAsFixed(0);
+                      });
+                    });
+          animationRecovered = Tween<double>(
+                  begin: 0, end: state.world!.recovered * 1)
+              .animate(_controller)
+                ..addListener(() {
+                  // print(animationRecovered.value.toStringAsFixed(0));
+                  setState(() {
+                    recovered = animationRecovered.value.toStringAsFixed(0);
                   });
-            _controller.forward();
-            return SingleChildScrollView(
-              child: Center(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(alignment: const Alignment(1, -1), children: [
-                    const Header(),
-                    GestureDetector(
-                      onTapDown: (TapDownDetails details) {
-                        _showPopupMenu(details.globalPosition, context);
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.arrow_drop_down_circle_outlined,
-                          color: Colors.white,
-                        ),
+                });
+          _controller.forward();
+          return SingleChildScrollView(
+            child: Center(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(alignment: const Alignment(1, -1), children: [
+                  const Header(),
+                  GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _showPopupMenu(details.globalPosition, context);
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.arrow_drop_down_circle_outlined,
+                        color: Colors.white,
                       ),
                     ),
-                  ]),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Statistical(
-                          country: "thế giới",
-                          death: int.parse(death),
-                          infected: int.parse(infected),
-                          newRecovered: state.world!.todayRecovered,
-                          newDeath: state.world!.todayDeaths,
-                          recovered: int.parse(recovered),
-                          newInfected: state.world!.todayCases,
-                        ),
-                        BlocBuilder<HomeBloc, HomeState>(
-                            builder: (context, state) {
-                          if (state is HomeSuccessState) {
-                            return Stack(
-                              alignment: const Alignment(1, -1),
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    context
-                                        .read<HomeBloc>()
-                                        .add(ChangeChartEvent(true));
-                                  },
-                                  icon: const Icon(Icons.replay_circle_filled),
-                                ),
-                                MyPieChart(
-                                  valueDeath: state.world!.deaths,
-                                  valueInfected: state.world!.cases -
-                                      (state.world!.recovered +
-                                          state.world!.deaths),
-                                  valueRecovered: state.world!.recovered,
-                                ),
-                              ],
-                            );
-                          } else if (state is ChartState) {
-                            return Stack(
-                              alignment: const Alignment(1, -1),
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    context
-                                        .read<HomeBloc>()
-                                        .add(ChangeChartEvent(false));
-                                  },
-                                  icon: const Icon(Icons.replay_circle_filled),
-                                ),
-                                MyLineChart(
-                                  leftTittle: leftTitleWord,
-                                  maxY: 1000000/1.25,
-                                  step: 250000/1.25,
-                                  spotCases: state.spotCases!,
-                                  spotDeaths: state.spotDeaths!,
-                                  spotRevovered: state.spotRecovered!,
-                                  bottomTittle: state.date!,
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
-                      ],
-                    ),
                   ),
-                ],
-              )),
-            );
-          } else if (state is HomeFailState) {
-            return Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Kết nối thất bại"),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    context.read<HomeBloc>().add(LoadingHomeEvent());
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      width: 100,
-                      height: 40,
-                      color: Colors.blue,
-                      child: const Text(
-                        "Thử lại",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      )),
+                ]),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Statistical(
+                        country: "thế giới",
+                        death: int.parse(death),
+                        infected: int.parse(infected),
+                        newRecovered: state.world!.todayRecovered,
+                        newDeath: state.world!.todayDeaths,
+                        recovered: int.parse(recovered),
+                        newInfected: state.world!.todayCases,
+                      ),
+                      BlocBuilder<HomeBloc, HomeState>(
+                          builder: (context, state) {
+                        if (state is HomeSuccessState) {
+                          return Stack(
+                            alignment: const Alignment(1, -1),
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<HomeBloc>()
+                                      .add(ChangeChartEvent(true));
+                                },
+                                icon: const Icon(Icons.replay_circle_filled),
+                              ),
+                              MyPieChart(
+                                valueDeath: state.world!.deaths,
+                                valueInfected: state.world!.cases -
+                                    (state.world!.recovered +
+                                        state.world!.deaths),
+                                valueRecovered: state.world!.recovered,
+                              ),
+                            ],
+                          );
+                        } else if (state is ChartState) {
+                          return Stack(
+                            alignment: const Alignment(1, -1),
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<HomeBloc>()
+                                      .add(ChangeChartEvent(false));
+                                },
+                                icon: const Icon(Icons.replay_circle_filled),
+                              ),
+                              MyLineChart(
+                                leftTittle: leftTitleWord,
+                                maxY: 1000000 / 1.25,
+                                step: 250000 / 1.25,
+                                spotCases: state.spotCases!,
+                                spotDeaths: state.spotDeaths!,
+                                spotRevovered: state.spotRecovered!,
+                                bottomTittle: state.date!,
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                    ],
+                  ),
                 ),
               ],
-            ));
-          } else {
-            return Container();
-          }
-        },
-      ),
+            )),
+          );
+        } else if (state is HomeFailState) {
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Kết nối thất bại"),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () {
+                  context.read<HomeBloc>().add(LoadingHomeEvent());
+                },
+                child: Container(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    width: 100,
+                    height: 40,
+                    color: Colors.blue,
+                    child: const Text(
+                      "Thử lại",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )),
+              ),
+            ],
+          ));
+        } else {
+          return Container();
+        }
+      },
     );
   }
 }

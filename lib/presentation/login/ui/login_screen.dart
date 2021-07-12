@@ -2,7 +2,7 @@ import 'package:covid19_app/config/app_color.dart';
 import 'package:covid19_app/presentation/common/error_form.dart';
 import 'package:covid19_app/presentation/common/toast.dart';
 import 'package:covid19_app/presentation/login/bloc/login_bloc.dart';
-import 'package:covid19_app/presentation/register/ui/register_screen.dart';
+import 'package:covid19_app/utils/route/app_routing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -177,11 +177,7 @@ class _LoginScreen extends State<LoginScreen> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const RegisterScreen()));
+                                    Navigator.pushNamed(context, RouteDefine.registerScreen.name);
                                   },
                                   child: const Text(
                                     " Đăng ký ngay",

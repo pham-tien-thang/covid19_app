@@ -43,246 +43,243 @@ class _RegisterScreen extends State<RegisterScreen> {
           body: Center(
             // Center is a layout widget. It takes a single child and positions it
             // in the middle of the parent.
-            child: BlocProvider(
-              create: (BuildContext context) => RegisterBloc(),
-              child: BlocConsumer<RegisterBloc, RegisterState>(
-                  listener: (previous, state) {
-                if (state is RegisterSuccess) {
-                  showToast("Đăng ký thành công", context, AppColor.mainColor,
-                      Icons.check, fToast);
-                  Navigator.of(context).pop();
+            child: BlocConsumer<RegisterBloc, RegisterState>(
+                listener: (previous, state) {
+              if (state is RegisterSuccess) {
+                showToast("Đăng ký thành công", context, AppColor.mainColor,
+                    Icons.check, fToast);
+                Navigator.of(context).pop();
+              }
+              if (state is RegisterFail) {
+                if (state.error == Error.networkRequestFailed) {
+                  showToast("Kiểm tra kết nối internet !", context,
+                      Colors.grey, Icons.warning, fToast);
                 }
-                if (state is RegisterFail) {
-                  if (state.error == Error.networkRequestFailed) {
-                    showToast("Kiểm tra kết nối internet !", context,
-                        Colors.grey, Icons.warning, fToast);
-                  }
-                  if (state.error == Error.unKnow) {
-                    showToast("Lỗi không xác định !", context, Colors.grey,
-                        Icons.warning, fToast);
-                  }
+                if (state.error == Error.unKnow) {
+                  showToast("Lỗi không xác định !", context, Colors.grey,
+                      Icons.warning, fToast);
                 }
-              }, builder: (context, state) {
-                return Container(
-                  color: Colors.white,
-                  width: _mediaQuery.width,
-                  height: availableHeight,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: Image.asset("assets/image/header.png"),
+              }
+            }, builder: (context, state) {
+              return Container(
+                color: Colors.white,
+                width: _mediaQuery.width,
+                height: availableHeight,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Image.asset("assets/image/header.png"),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text(
+                          "ĐĂNG KÝ",
+                          style: TextStyle(
+                              fontFamily: "coiny",
+                              color: AppColor.mainColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Center(
                           child: Text(
-                            "ĐĂNG KÝ",
+                            "Đăng ký để theo dõi thông tin dịch bệnh",
                             style: TextStyle(
-                                fontFamily: "coiny",
-                                color: AppColor.mainColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
+                                fontFamily: "coiny", fontSize: 12.5),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          child: Center(
-                            child: Text(
-                              "Đăng ký để theo dõi thông tin dịch bệnh",
-                              style: TextStyle(
-                                  fontFamily: "coiny", fontSize: 12.5),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: TextField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _name,
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                              errorText: state is RegisterFail
+                                  ? (state.errMail!.isEmpty
+                                      ? null
+                                      : state.errMail)
+                                  : null,
+                              suffixIcon: const Icon(
+                                Icons.mail,
+                                color: AppColor.mainColor,
+                              ),
+                              fillColor: Colors.grey,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 1.0)),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0)),
+                              hintText: 'Email của bạn',
+                              hintStyle: const TextStyle(color: Colors.grey)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                        child: TextField(
+                          controller: _passWord,
+                          obscureText: state is PassWordRegisterState
+                              ? state.obcureText!
+                              : _obscuretextPassWord,
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                              errorText: state is RegisterFail
+                                  ? (state.errPassWord!.isEmpty
+                                      ? null
+                                      : state.errPassWord)
+                                  : null,
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  var eventObs =
+                                      state is PassWordRegisterState
+                                          ? state.obcureText!
+                                          : _obscuretextPassWord;
+                                  context.read<RegisterBloc>().add(
+                                      ObscureTextPassWord(
+                                          obcureText: eventObs));
+                                },
+                                child: Icon(
+                                  state is PassWordRegisterState
+                                      ? (state.obcureText!
+                                          ? Icons.lock
+                                          : Icons.lock_open)
+                                      : Icons.lock,
+                                  color: AppColor.mainColor,
+                                ),
+                              ),
+                              fillColor: Colors.grey,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 1.0)),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0)),
+                              hintText: 'Mật khẩu',
+                              hintStyle: const TextStyle(color: Colors.grey)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        child: TextField(
+                          controller: _rePassWord,
+                          obscureText: state is RePassWordRegisterState
+                              ? state.obcureText!
+                              : _obscuretextRePassword,
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                              errorText: state is RegisterFail
+                                  ? (state.errRePassWord!.isEmpty
+                                      ? null
+                                      : state.errRePassWord)
+                                  : null,
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  var eventObs =
+                                      state is RePassWordRegisterState
+                                          ? state.obcureText!
+                                          : _obscuretextRePassword;
+                                  context.read<RegisterBloc>().add(
+                                      ObscureTextRePassWord(
+                                          obcureText: eventObs));
+                                },
+                                child: Icon(
+                                  state is RePassWordRegisterState
+                                      ? (state.obcureText!
+                                          ? Icons.lock
+                                          : Icons.lock_open)
+                                      : Icons.lock,
+                                  color: AppColor.mainColor,
+                                ),
+                              ),
+                              fillColor: Colors.grey,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 1.0)),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0)),
+                              hintText: 'Nhập lại mật khẩu',
+                              hintStyle: const TextStyle(color: Colors.grey)),
+                        ),
+                      ),
+                      if (state is! RegisterLoading) ...[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                side: const BorderSide(
+                                  width: 2.0,
+                                  color: Colors.white54,
+                                ),
+                                onPrimary: Colors.grey,
+                                primary: Colors.black,
+                                // minimumSize: Size(mediaQuery.o.width/1.5, 50),
+                                padding:
+                                    const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(40),
+                                  ),
+                                )),
+                            onPressed: () {
+                              FocusScope.of(context).requestFocus(
+                                FocusNode(),
+                              );
+                              context.read<RegisterBloc>().add(RegisterPress(
+                                  email: _name.text,
+                                  password: _passWord.text,
+                                  repassword: _rePassWord.text));
+                            },
+                            child: const Text(
+                              "Đăng ký ",
+                              style: TextStyle(color: AppColor.mainColor),
                             ),
                           ),
                         ),
+                      ],
+                      if (state is RegisterLoading) ...[
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _name,
-                            style: const TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                                errorText: state is RegisterFail
-                                    ? (state.errMail!.isEmpty
-                                        ? null
-                                        : state.errMail)
-                                    : null,
-                                suffixIcon: const Icon(
-                                  Icons.mail,
-                                  color: AppColor.mainColor,
-                                ),
-                                fillColor: Colors.grey,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: const BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                hintText: 'Email của bạn',
-                                hintStyle: const TextStyle(color: Colors.grey)),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                          child: TextField(
-                            controller: _passWord,
-                            obscureText: state is PassWordRegisterState
-                                ? state.obcureText!
-                                : _obscuretextPassWord,
-                            style: const TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                                errorText: state is RegisterFail
-                                    ? (state.errPassWord!.isEmpty
-                                        ? null
-                                        : state.errPassWord)
-                                    : null,
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    var eventObs =
-                                        state is PassWordRegisterState
-                                            ? state.obcureText!
-                                            : _obscuretextPassWord;
-                                    context.read<RegisterBloc>().add(
-                                        ObscureTextPassWord(
-                                            obcureText: eventObs));
-                                  },
-                                  child: Icon(
-                                    state is PassWordRegisterState
-                                        ? (state.obcureText!
-                                            ? Icons.lock
-                                            : Icons.lock_open)
-                                        : Icons.lock,
-                                    color: AppColor.mainColor,
-                                  ),
-                                ),
-                                fillColor: Colors.grey,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: const BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                hintText: 'Mật khẩu',
-                                hintStyle: const TextStyle(color: Colors.grey)),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          child: TextField(
-                            controller: _rePassWord,
-                            obscureText: state is RePassWordRegisterState
-                                ? state.obcureText!
-                                : _obscuretextRePassword,
-                            style: const TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                                errorText: state is RegisterFail
-                                    ? (state.errRePassWord!.isEmpty
-                                        ? null
-                                        : state.errRePassWord)
-                                    : null,
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    var eventObs =
-                                        state is RePassWordRegisterState
-                                            ? state.obcureText!
-                                            : _obscuretextRePassword;
-                                    context.read<RegisterBloc>().add(
-                                        ObscureTextRePassWord(
-                                            obcureText: eventObs));
-                                  },
-                                  child: Icon(
-                                    state is RePassWordRegisterState
-                                        ? (state.obcureText!
-                                            ? Icons.lock
-                                            : Icons.lock_open)
-                                        : Icons.lock,
-                                    color: AppColor.mainColor,
-                                  ),
-                                ),
-                                fillColor: Colors.grey,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    borderSide: const BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                hintText: 'Nhập lại mật khẩu',
-                                hintStyle: const TextStyle(color: Colors.grey)),
-                          ),
-                        ),
-                        if (state is! RegisterLoading) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   side: const BorderSide(
                                     width: 2.0,
                                     color: Colors.white54,
                                   ),
                                   onPrimary: Colors.grey,
-                                  primary: Colors.black,
+                                  primary: Colors.grey,
                                   // minimumSize: Size(mediaQuery.o.width/1.5, 50),
-                                  padding:
-                                      const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      40, 20, 40, 20),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(40),
                                     ),
                                   )),
-                              onPressed: () {
-                                FocusScope.of(context).requestFocus(
-                                  FocusNode(),
-                                );
-                                context.read<RegisterBloc>().add(RegisterPress(
-                                    email: _name.text,
-                                    password: _passWord.text,
-                                    repassword: _rePassWord.text));
-                              },
-                              child: const Text(
-                                "Đăng ký ",
-                                style: TextStyle(color: AppColor.mainColor),
-                              ),
-                            ),
-                          ),
-                        ],
-                        if (state is RegisterLoading) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    side: const BorderSide(
-                                      width: 2.0,
-                                      color: Colors.white54,
-                                    ),
-                                    onPrimary: Colors.grey,
-                                    primary: Colors.grey,
-                                    // minimumSize: Size(mediaQuery.o.width/1.5, 50),
-                                    padding: const EdgeInsets.fromLTRB(
-                                        40, 20, 40, 20),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(40),
-                                      ),
-                                    )),
-                                onPressed: () {},
-                                child: SizedBox(
-                                  width: _mediaQuery.width / 5,
-                                  child: const SpinKitFadingCircle(
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                )),
-                          ),
-                        ]
-                      ],
-                    ),
+                              onPressed: () {},
+                              child: SizedBox(
+                                width: _mediaQuery.width / 5,
+                                child: const SpinKitFadingCircle(
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              )),
+                        ),
+                      ]
+                    ],
                   ),
-                );
-              }),
-            ),
+                ),
+              );
+            }),
           ),
           // This trailing comma makes auto-formatting nicer for build methods.
         ),
