@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:covid19_app/data/api/covid_api.dart';
 import 'package:covid19_app/data/responsitories/covid_respository_impl.dart';
 import 'package:covid19_app/data/utils/shared_pref_manager.dart';
 import 'package:covid19_app/domain/usescase/covid_usescase.dart';
 import 'package:covid19_app/presentation/common/array.dart';
+import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:covid19_app/presentation/favorite/ui/favorite_screen.dart';
 import 'package:covid19_app/presentation/home/ui/chart/line/line_chart.dart';
 import 'package:covid19_app/presentation/login/ui/login_screen.dart';
@@ -60,14 +63,19 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
   ///khi nguoi dung bam back,
   /// neu [_selectedIndex] = 0 (nguoi dung dang o trang home) thi show [showDialogFunction]
   /// neu [_selectedIndex] khac 0 thi gan [_selectedIndex] = 0 (nguoi dung quay ve trang home)
-  bool shouldPop() {
+  Future<bool> shouldPop() async {
     if (_selectedIndex != 0) {
       setState(() {
         _selectedIndex = 0;
       });
       return false;
     } else {
-      showDialogFunction(context);
+      final a = await showDialogApp(context,"Hủy","Đồng ý","Thoát ứng dụng ?");
+      if (a == Selects.cancel) {
+        return false;
+      } else if (a == Selects.accept) {
+       exit(1);
+      }
       return false;
     }
   }

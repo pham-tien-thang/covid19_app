@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:covid19_app/data/utils/shared_pref_manager.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
+import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:covid19_app/config/app_color.dart';
 import 'package:covid19_app/presentation/home/ui/home_screen.dart';
@@ -47,7 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async{
-        showDialogFunction(context);
+        final a = await showDialogApp(context,"Hủy","Đồng ý","Thoát ứng dụng ?");
+        if (a == Selects.cancel) {
+          return false;
+        } else if (a == Selects.accept) {
+          exit(1);
+        }
         return false;
       },
       child: Scaffold(

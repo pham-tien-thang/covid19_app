@@ -1,5 +1,7 @@
 import 'package:covid19_app/config/app_color.dart';
+import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:covid19_app/presentation/common/error_form.dart';
+import 'package:covid19_app/presentation/login/ui/login_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
 import 'package:covid19_app/presentation/common/toast.dart';
@@ -44,9 +46,11 @@ class _SearchScreen extends State<SearchScreen> {
                 ),
               ),
             ))
-              ..add(LoadSearchEvent()),
+              ..add(
+                LoadSearchEvent(),
+              ),
             child: BlocConsumer<SearchBloc, SearchState>(
-              listener: (pre, state) {
+              listener: (pre, state) async {
                 if (state is AddFavoriteSuccessState) {
                   // FToast fToast2 = FToast();
                   showToast(
@@ -59,7 +63,18 @@ class _SearchScreen extends State<SearchScreen> {
                 if (state is AddFavoriteFailState) {
                   switch (state.error) {
                     case Error.isNotLogin:
-                      showDialogLogin(context);
+                      {
+                        var dialog = await showDialogApp(
+                            context, "Hủy", "Đăng nhập", "Bạn chưa đăng nhập");
+                        if (dialog == Selects.cancel) {
+                        } else if (dialog == Selects.accept) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
+                        }
+                      }
+                      ;
                       break;
                     case Error.exist:
                       showToast(

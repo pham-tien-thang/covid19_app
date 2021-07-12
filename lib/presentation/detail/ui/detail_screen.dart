@@ -1,12 +1,14 @@
 import 'package:covid19_app/config/app_color.dart';
 import 'package:covid19_app/data/model/country_response.dart';
 import 'package:covid19_app/presentation/common/dialog.dart';
+import 'package:covid19_app/presentation/common/enum.dart';
 import 'package:covid19_app/presentation/common/error_form.dart';
 import 'package:covid19_app/presentation/common/toast.dart';
 import 'package:covid19_app/presentation/detail/bloc/detail_bloc.dart';
 import 'package:covid19_app/presentation/home/ui/chart/pie/pie_chart.dart';
 import 'package:covid19_app/presentation/home/ui/item/header.dart';
 import 'package:covid19_app/presentation/home/ui/statisicalpackage/statistical.dart';
+import 'package:covid19_app/presentation/login/ui/login_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,8 @@ class _DetailScreen extends State<DetailScreen> with TickerProviderStateMixin {
   Widget _detailWidget() {
     return BlocProvider(
       create: (BuildContext context) => DetailBloc(),
-      child: BlocConsumer<DetailBloc, DetailState>(listener: (pre, state) {
+      child:
+          BlocConsumer<DetailBloc, DetailState>(listener: (pre, state) async {
         if (state is AddFavoriteSuccessStateFromDetail) {
           // FToast fToast2 = FToast();
           showToast(
@@ -49,7 +52,18 @@ class _DetailScreen extends State<DetailScreen> with TickerProviderStateMixin {
         if (state is AddFavoriteFailStateFromDetail) {
           switch (state.error) {
             case Error.isNotLogin:
-              showDialogLogin(context);
+              var dialog = await showDialogApp(
+                  context, "Hủy", "Đăng nhập", "Bạn chưa đăng nhập");
+              if (dialog == Selects.cancel) {
+              } else if (dialog == Selects.accept) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              }
+
               break;
             case Error.exist:
               showToast(

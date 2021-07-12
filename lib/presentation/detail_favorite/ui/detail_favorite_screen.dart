@@ -14,7 +14,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dio/dio.dart';
 
 class DetailFavoriteScreen extends StatefulWidget {
-  const DetailFavoriteScreen({Key? key, required this.country}) : super(key: key);
+  const DetailFavoriteScreen({Key? key, required this.country})
+      : super(key: key);
   final FavoriteCountry country;
   @override
   _DetailFavoriteScreen createState() => _DetailFavoriteScreen();
@@ -31,14 +32,22 @@ class _DetailFavoriteScreen extends State<DetailFavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: _detailWidget()));
+    return SafeArea(child: Scaffold(body: _detailWidget(),),);
   }
 
   Widget _detailWidget() {
     return BlocProvider(
       create: (BuildContext context) => DetailFavoriteBloc(
-          CovidUsescase(CovidRespositoryImpl(CovidApi(Dio()))))
-        ..add(LoadDetailFavoriteEvent(api: widget.country.countryName)),
+        CovidUsescase(
+          CovidRespositoryImpl(
+            CovidApi(
+              Dio(),
+            ),
+          ),
+        ),
+      )..add(
+          LoadDetailFavoriteEvent(api: widget.country.countryName),
+        ),
       child: BlocBuilder<DetailFavoriteBloc, DetailFavoriteState>(
           builder: (context, state) {
         if (state is LoadingDetailFavoriteState) {
@@ -106,15 +115,14 @@ class _DetailFavoriteScreen extends State<DetailFavoriteScreen> {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const  Text("Kết nối thất bại"),
+              const Text("Kết nối thất bại"),
               const SizedBox(
                 height: 10,
               ),
               InkWell(
                 onTap: () {
-                  context
-                      .read<DetailFavoriteBloc>()
-                      .add(LoadDetailFavoriteEvent(api: widget.country.countryName));
+                  context.read<DetailFavoriteBloc>().add(
+                      LoadDetailFavoriteEvent(api: widget.country.countryName));
                 },
                 child: Container(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),

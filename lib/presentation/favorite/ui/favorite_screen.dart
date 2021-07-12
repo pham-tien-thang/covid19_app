@@ -135,7 +135,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                     onPressed: () async {
                                       ScaffoldMessenger.of(context)
                                           .removeCurrentSnackBar();
-                                      final a = await showDialogDelete(context);
+                                      final a = await showDialogApp(context,"Hủy","Đồng ý","Hủy theo dõi quốc gia này?");
                                       if (a == Selects.cancel) {
                                       } else if (a == Selects.accept) {
                                         context.read<FavoriteBloc>().add(

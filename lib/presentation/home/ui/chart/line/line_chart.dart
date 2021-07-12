@@ -223,9 +223,9 @@ class _MyLineChart extends State<MyLineChart> {
           ),
         ),
         Note(
-          title1: "Số ca",
-          title2: "Tử vong",
-          title3: "Hồi phục",
+          title1: "Ca nhiễm mới",
+          title2: "Ca tử vong mới",
+          title3: "Ca hồi phục mới",
           colors1: Colors.yellow.shade700,
           colors2: Colors.red,
           colors3: Colors.green,
