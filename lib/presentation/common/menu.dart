@@ -6,13 +6,13 @@ class Option {
   static const String login = 'Đăng nhập';
   static const String favorite = 'Theo dõi';
   static const String declare = 'Khai báo y tế ';
-  static const String disease_report = 'Báo cáo dịch bệnh';
+  static const String diseaseReport = 'Báo cáo dịch bệnh';
   static const List<String> isLogin = <String>[
     logout,
   ];
   static const List<String> phoneCall = <String>[
     declare,
-    disease_report,
+    diseaseReport,
   ];
   static const List<String> isNotLogin = <String>[login];
 }

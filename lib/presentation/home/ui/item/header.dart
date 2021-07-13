@@ -24,7 +24,7 @@ class _Header extends State<Header> {
 
     if (result == Option.declare) {
       launch("tel://18001119");
-    } else if(result == Option.disease_report) {
+    } else if(result == Option.diseaseReport) {
       launch("tel://19009095");
     }
   }
@@ -71,10 +71,9 @@ class _Header extends State<Header> {
                         style: TextStyle(
                             color: Colors.white, fontSize: 12.5),
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTapDown: (t){
                           _showPopupMenu(t.globalPosition, context);
-
                         },
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -95,7 +94,7 @@ class _Header extends State<Header> {
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const[
+                            children: const [
                                Icon(
                                 Icons.call,
                                 color: AppColor.mainColor,

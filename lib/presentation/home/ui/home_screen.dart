@@ -197,7 +197,7 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(alignment: const Alignment(1, -1), children: [
-                  const Header(),
+                   const Header(),
                   GestureDetector(
                     onTapDown: (TapDownDetails details) {
                       _showPopupMenu(details.globalPosition, context);
@@ -231,14 +231,14 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
                           return Stack(
                             alignment: const Alignment(1, -1),
                             children: [
-                              IconButton(
-                                onPressed: () {
-                                  context
-                                      .read<HomeBloc>()
-                                      .add(ChangeChartEvent(true));
-                                },
-                                icon: const Icon(Icons.replay_circle_filled),
-                              ),
+                              // IconButton(
+                              //   onPressed: () {
+                              //     context
+                              //         .read<HomeBloc>()
+                              //         .add(ChangeChartEvent(true));
+                              //   },
+                              //   icon: const Icon(Icons.replay_circle_filled),
+                              // ),
                               MyPieChart(
                                 valueDeath: state.world!.deaths,
                                 valueInfected: state.world!.cases -
@@ -252,14 +252,14 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
                           return Stack(
                             alignment: const Alignment(1, -1),
                             children: [
-                              IconButton(
-                                onPressed: () {
-                                  context
-                                      .read<HomeBloc>()
-                                      .add(ChangeChartEvent(false));
-                                },
-                                icon: const Icon(Icons.replay_circle_filled),
-                              ),
+                              // IconButton(
+                              //   onPressed: () {
+                              //     context
+                              //         .read<HomeBloc>()
+                              //         .add(ChangeChartEvent(false));
+                              //   },
+                              //   icon: const Icon(Icons.replay_circle_filled),
+                              // ),
                               MyLineChart(
                                 leftTittle: leftTitleWord,
                                 maxY: 1000000 / 1.25,
