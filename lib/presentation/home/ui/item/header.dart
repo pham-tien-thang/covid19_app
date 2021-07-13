@@ -24,7 +24,7 @@ class _Header extends State<Header> {
 
     if (result == Option.declare) {
       launch("tel://18001119");
-    } else if(result == Option.customise) {
+    } else if(result == Option.disease_report) {
       launch("tel://19009095");
     }
   }
