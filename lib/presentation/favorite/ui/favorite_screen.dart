@@ -138,6 +138,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                           "Đồng ý",
                                           "Hủy theo dõi quốc gia này?");
                                       if (a == Selects.cancel) {
+
                                       } else if (a == Selects.accept) {
                                         context.read<FavoriteBloc>().add(
                                             DeleteFavoriteEvent(
@@ -192,8 +193,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             style: TextStyle(fontSize: 15),
           ),
           InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+            onTap: () async {
+             await Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+              setState(() {
+              });
             },
             child: SizedBox(
               height: 50,

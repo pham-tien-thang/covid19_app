@@ -14,7 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
   final CovidUsescase covidUsecase;
   late final World worldPbublic;
-  History history= History();
+  History history = History();
   List date = [];
   List<Spot> valueCases = [];
   List<Spot> valueDeaths = [];
@@ -44,14 +44,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final reponse = await covidUsecase.getWorld();
       final reponseHistory = await covidUsecase.getHistory();
-      history =reponseHistory;
-       date = history.itemCase!.json!.keys.toList();
-      history.itemDeaths!.json!
-          .forEach((k, v) => valueDeaths.add(Spot(date: k, value: v*1.0)));
-      history.itemCase!.json!
-          .forEach((k, v) => valueCases.add(Spot(date: k, value: v*1.0)));
-      history.itemRecovered!.json!
-          .forEach((k, v) => valueRecovered.add(Spot(date: k, value: v*1.0)));
+      history = reponseHistory;
+      date = history.itemCase!.json!.keys.toList();
+      history.itemDeaths!.json!.forEach(
+        (k, v) => valueDeaths.add(
+          Spot(date: k, value: v * 1.0),
+        ),
+      );
+      history.itemCase!.json!.forEach(
+        (k, v) => valueCases.add(
+          Spot(date: k, value: v * 1.0),
+        ),
+      );
+      history.itemRecovered!.json!.forEach(
+        (k, v) => valueRecovered.add(
+          Spot(date: k, value: v * 1.0),
+        ),
+      );
       worldPbublic = reponse;
       yield HomeSuccessState(world: worldPbublic);
     } catch (e) {

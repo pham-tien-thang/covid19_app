@@ -145,7 +145,7 @@ class _HomeScreen extends State<HomeScreen> with TickerProviderStateMixin {
       case 1:
         return const SearchScreen();
       case 2:
-        return FavoriteScreen();
+        return const FavoriteScreen();
       default:
         return const Text("lỗi");
     }

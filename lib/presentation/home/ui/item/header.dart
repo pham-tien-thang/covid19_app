@@ -72,9 +72,6 @@ class _Header extends State<Header> {
                             color: Colors.white, fontSize: 12.5),
                       ),
                       InkWell(
-                        onTap: (){
-
-                        },
                         onTapDown: (t){
                           _showPopupMenu(t.globalPosition, context);
 
